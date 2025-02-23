@@ -1,25 +1,26 @@
-// routes/taskRoutes.js
 const express = require('express');
 const { Task } = require('../models');
+const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// Get all tasks
-router.get('/', async (req, res) => {
-    const tasks = await Task.findAll();
+// Get all tasks (Protected)
+router.get('/', authMiddleware, async (req, res) => {
+    const tasks = await Task.findAll({ where: { userId: req.user.id } });
     res.json(tasks);
 });
 
-// Add a task
-router.post('/', async (req, res) => {
-    const { userId, name } = req.body;
-    const newTask = await Task.create({ userId, name, completed: false });
+// Add a task (Protected)
+router.post('/', authMiddleware, async (req, res) => {
+    const { name } = req.body;
+    const newTask = await Task.create({ userId: req.user.id, name, completed: false });
     res.json(newTask);
 });
 
-// Mark task as completed
-router.put('/:id', async (req, res) => {
+// Mark task as completed (Protected)
+router.put('/:id', authMiddleware, async (req, res) => {
     const task = await Task.findByPk(req.params.id);
-    if (!task) return res.status(404).json({ error: 'Task not found' });
+    if (!task || task.userId !== req.user.id) return res.status(404).json({ error: 'Task not found' });
+
     task.completed = true;
     await task.save();
     res.json(task);
