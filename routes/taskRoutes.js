@@ -11,10 +11,15 @@ router.get('/', authMiddleware, async (req, res) => {
 
 // Add a task (Protected)
 router.post('/', authMiddleware, async (req, res) => {
-    const { name } = req.body;
-    const newTask = await Task.create({ userId: req.user.id, name, completed: false });
-    res.json(newTask);
+    try {
+        const { name } = req.body;
+        const newTask = await Task.create({ userId: req.user.id, name, completed: false });
+        res.json(newTask);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error: ' + error.message });
+    }
 });
+
 
 // Mark task as completed (Protected)
 router.put('/:id', authMiddleware, async (req, res) => {
