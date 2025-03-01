@@ -1,8 +1,8 @@
-const { sequelize } = require('../database');
+const { sequelize } = require('../config/database');
 const User = require('./User');
 const Task = require('./Task');
 const Message = require('./Message');
-const Accountability = require('./Accountability'); // If you have this model
+const Accountability = require('./Accountability');
 
 // Define associations
 User.hasMany(Task, { foreignKey: 'userId' });

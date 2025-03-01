@@ -1,4 +1,6 @@
-// models/Task.js
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database').sequelize;
+
 const Task = sequelize.define('Task', {
     id: {
         type: DataTypes.UUID,

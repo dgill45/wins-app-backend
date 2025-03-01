@@ -1,4 +1,6 @@
-// models/Accountability.js
+const { DataTypes, Sequelize } = require('sequelize');
+const sequelize = require('../config/database').sequelize;
+
 const Accountability = sequelize.define('Accountability', {
     id: {
         type: DataTypes.UUID,
